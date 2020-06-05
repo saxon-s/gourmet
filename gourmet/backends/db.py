@@ -2,6 +2,7 @@ from functools import cmp_to_key
 import shutil
 from gourmet.gdebug import debug, TimeAction, debug_decorator
 import re, string, os.path, time
+from typing import Mapping, Optional, List, Any, Tuple
 from gettext import gettext as _
 import gourmet.gglobals as gglobals
 from gourmet import Undo, keymanager, convert
@@ -894,10 +895,10 @@ class RecData (Pluggable, BaseException):
                   ]
         return [x for x in retval if x is not None] # Don't return null values
 
-    def get_ingkeys_with_count (self, search=None):
+    def get_ingkeys_with_count(self, search: Optional[Mapping[str, Any]] = None) -> List[Tuple[int, str]]:
         """Get unique list of ingredient keys and counts for number of times they appear in the database.
         """
-        if search is None:  # replaced mutable default argument: search={}
+        if search is None:
            search = {}
 
         if search:
@@ -911,7 +912,7 @@ class RecData (Pluggable, BaseException):
                 criteria = col.contains(search['search'])
             else:
                 criteria = (col == search['search'])
-            result = sqlalchemy.select(
+            result =  sqlalchemy.select(
                 [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label('count'),
                  self.ingredients_table.c.ingkey],
                 criteria,
@@ -920,7 +921,7 @@ class RecData (Pluggable, BaseException):
                    }
                 ).execute().fetchall()
         else:  # return all ingredient keys with counts
-            result = sqlalchemy.select(
+            result =  sqlalchemy.select(
                 [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label('count'),
                  self.ingredients_table.c.ingkey],
                 **{'group_by':'ingkey',

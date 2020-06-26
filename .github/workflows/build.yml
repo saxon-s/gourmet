@@ -5,9 +5,9 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ py3-migration ]
   pull_request:
-    branches: [ master ]
+    branches: [ py3-migration ]
 
 jobs:
   build:
